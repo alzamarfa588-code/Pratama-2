@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transkrip Nilai - Alzam Arfa Pratama</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto space-y-6">
+
+        <!-- Header Profil Siswa -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+                <div>
+                    <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full mb-2">Laporan Hasil Belajar</span>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800">Alzam Arfa Pratama</h1>
+                    <p class="text-sm text-slate-500 font-medium">SMPN 1 Wanaraja</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                    <span class="text-slate-500">NISN:</span>
+                    <span class="font-semibold text-slate-800 text-right">0139737151</span>
+                    <span class="text-slate-500">Kelas:</span>
+                    <span class="font-semibold text-slate-800 text-right">7 I (Fase D)</span>
+                    <span class="text-slate-500">Tahun Ajaran:</span>
+                    <span class="font-semibold text-slate-800 text-right">2025/2026</span>
+                </div>
+            </div>
+
+            <!-- Kartu Ringkasan / Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl">
+                    <p class="text-xs font-medium text-blue-600 uppercase tracking-wider">Rata-Rata Nilai</p>
+                    <p id="statRataRata" class="text-3xl font-extrabold text-blue-700 mt-1">0</p>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl">
+                    <p class="text-xs font-medium text-emerald-600 uppercase tracking-wider">Nilai Tertinggi</p>
+                    <p id="statTertinggi" class="text-3xl font-extrabold text-emerald-700 mt-1">0</p>
+                </div>
+                <div class="bg-amber-50 border border-amber-100 p-4 rounded-xl">
+                    <p class="text-xs font-medium text-amber-600 uppercase tracking-wider">Nilai Terendah</p>
+                    <p id="statTerendah" class="text-3xl font-extrabold text-amber-700 mt-1">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Area Filter & Tabel -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            
+            <!-- Filter Bar -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">Daftar Nilai Ulangan</h2>
+                    <p class="text-xs text-slate-500">Tampilkan hasil belajar berdasarkan semester</p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <label for="filterSemester" class="text-sm font-semibold text-slate-700">Filter:</label>
+                    <select id="filterSemester" onchange="filterNilai()" class="border border-slate-300 rounded-lg px-4 py-2 text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="semua">Semua Semester</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tabel Nilai -->
+            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-800 text-white font-semibold">
+                            <th class="p-3.5 pl-4">No</th>
+                            <th class="p-3.5">Mata Pelajaran</th>
+                            <th class="p-3.5 text-center">Semester</th>
+                            <th class="p-3.5 text-center">Nilai Akhir</th>
+                            <th class="p-3.5 text-center pr-4">Predikat / Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelNilai" class="divide-y divide-slate-200 text-slate-700">
+                        <!-- Data dimasukkan lewat JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <footer class="text-center text-xs text-slate-400 py-2">
+            Transkrip Nilai SMPN 1 Wanaraja &bull; Alzam Arfa Pratama
+        </footer>
+
+    </div>
+
+    <script>
+        // Data Nilai Resmi Alzam Arfa Pratama berdasarkan Rapor SMPN 1 Wanaraja
+        const dataNilai = [
+            // SEMESTER 1
+            { no: 1, mapel: "Pendidikan Agama Islam dan Budi Pekerti", semester: "1", nilai: 77 },
+            { no: 2, mapel: "Pendidikan Pancasila", semester: "1", nilai: 82 },
+            { no: 3, mapel: "Bahasa Indonesia", semester: "1", nilai: 85 },
+            { no: 4, mapel: "Matematika (Umum)", semester: "1", nilai: 81 },
+            { no: 5, mapel: "Ilmu Pengetahuan Alam (IPA)", semester: "1", nilai: 83 },
+            { no: 6, mapel: "Ilmu Pengetahuan Sosial (IPS)", semester: "1", nilai: 82 },
+            { no: 7, mapel: "Bahasa Inggris", semester: "1", nilai: 84 },
+            { no: 8, mapel: "Prakarya", semester: "1", nilai: 85 },
+            { no: 9, mapel: "Pendidikan Jasmani, Olahraga, dan Kesehatan", semester: "1", nilai: 85 },
+            { no: 10, mapel: "Informatika", semester: "1", nilai: 76 },
+            { no: 11, mapel: "Bahasa Sunda", semester: "1", nilai: 88 },
+
+            // SEMESTER 2
+            { no: 1, mapel: "Pendidikan Agama Islam dan Budi Pekerti", semester: "2", nilai: 80 },
+            { no: 2, mapel: "Pendidikan Pancasila", semester: "2", nilai: 89 },
+            { no: 3, mapel: "Bahasa Indonesia", semester: "2", nilai: 87 },
+            { no: 4, mapel: "Matematika (Umum)", semester: "2", nilai: 97 },
+            { no: 5, mapel: "Ilmu Pengetahuan Alam (IPA)", semester: "2", nilai: 85 },
+            { no: 6, mapel: "Ilmu Pengetahuan Sosial (IPS)", semester: "2", nilai: 85 },
+            { no: 7, mapel: "Bahasa Inggris", semester: "2", nilai: 80 },
+            { no: 8, mapel: "Prakarya", semester: "2", nilai: 84 },
+            { no: 9, mapel: "Pendidikan Jasmani, Olahraga, dan Kesehatan", semester: "2", nilai: 88 },
+            { no: 10, mapel: "Informatika", semester: "2", nilai: 82 },
+            { no: 11, mapel: "Bahasa Sunda", semester: "2", nilai: 90 }
+        ];
+
+        function getPredikat(nilai) {
+            if (nilai >= 90) return { label: "Sangat Baik", class: "bg-emerald-100 text-emerald-800" };
+            if (nilai >= 80) return { label: "Baik", class: "bg-blue-100 text-blue-800" };
+            return { label: "Cukup", class: "bg-amber-100 text-amber-800" };
+        }
+
+        function tampilkanNilai(items) {
+            const tbody = document.getElementById("tabelNilai");
+            tbody.innerHTML = "";
+
+            if (items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Tidak ada data.</td></tr>`;
+                document.getElementById("statRataRata").innerText = "0";
+                document.getElementById("statTertinggi").innerText = "0";
+                document.getElementById("statTerendah").innerText = "0";
+                return;
+            }
+
+            let total = 0;
+            let maxNilai = items[0].nilai;
+            let minNilai = items[0].nilai;
+
+            items.forEach((item, index) => {
+                total += item.nilai;
+                if (item.nilai > maxNilai) maxNilai = item.nilai;
+                if (item.nilai < minNilai) minNilai = item.nilai;
+
+                const predikat = getPredikat(item.nilai);
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-3.5 pl-4 font-medium text-slate-400">${index + 1}</td>
+                        <td class="p-3.5 font-semibold text-slate-800">${item.mapel}</td>
+                        <td class="p-3.5 text-center font-medium text-slate-500">Semester ${item.semester}</td>
+                        <td class="p-3.5 text-center font-bold text-slate-900 text-base">${item.nilai}</td>
+                        <td class="p-3.5 text-center pr-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${predikat.class}">${predikat.label}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Update Statistik
+            const rataRata = (total / items.length).toFixed(1);
+            document.getElementById("statRataRata").innerText = rataRata;
+            document.getElementById("statTertinggi").innerText = maxNilai;
+            document.getElementById("statTerendah").innerText = minNilai;
+        }
+
+        function filterNilai() {
+            const selected = document.getElementById("filterSemester").value;
+            if (selected === "semua") {
+                tampilkanNilai(dataNilai);
+            } else {
+                const filtered = dataNilai.filter(item => item.semester === selected);
+                tampilkanNilai(filtered);
+            }
+        }
+
+        // Tampilkan semua nilai saat pertama dimuat
+        tampilkanNilai(dataNilai);
+    </script>
+</body>
+  </html>
